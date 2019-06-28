@@ -62,10 +62,10 @@
         </span>
       </a>
       <ul class="treeview-menu">
-        <li <?php echo (basename($_SERVER['PHP_SELF']) == 'penilaian_saw')? $active :""; ?>>
+        <li <?php echo (basename($_SERVER['PHP_SELF']) == 'nilai_saw')? $active :""; ?>>
           <a href="<?php echo base_url('admin/nilai_saw');?>"><i class="fa fa-ellipsis-v"></i>Penilaian SAW</a>
         </li>
-        <li <?php echo (basename($_SERVER['PHP_SELF']) == 'penilaian_wp')? $active :""; ?>>
+        <li <?php echo (basename($_SERVER['PHP_SELF']) == 'nilai_wp')? $active :""; ?>>
           <a href="<?php echo base_url('admin/nilai_wp');?>"><i class="fa fa-ellipsis-v"></i>Penilaian WP</a>
         </li>
       </ul>
