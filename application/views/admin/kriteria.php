@@ -18,12 +18,6 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label class="col-lg-4 col-sm-4 control-label">Atribut</label>
-                        <div class="col-lg-8">
-                            <input type="text" class="form-control" id="atribut" name="atribut">
-                        </div>
-                    </div>
-                    <div class="form-group">
                         <label class="col-lg-4 col-sm-4 control-label">Nilai Bobot</label>
                         <div class="col-lg-8">
                             <input type="text" class="form-control" id="nilai_bobot" name="nilai_bobot">
@@ -56,12 +50,6 @@
                             <input type="text" class="form-control" id="nama_kriteria" name="nama_kriteria">
                             <input type="hidden" class="form-control" id="kd_kriteria" name="kd_kriteria">
 
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-lg-4 col-sm-4 control-label">Atribut</label>
-                        <div class="col-lg-8">
-                            <input type="text" class="form-control" id="atribut" name="atribut">
                         </div>
                     </div>
                     <div class="form-group">
@@ -117,7 +105,6 @@
             <th>No</th>
             <th>Kode Kriteria</th>
             <th>Nama Kriteria</th>
-            <th>Atribut</th>
             <th>Nilai Bobot</th>
             <th>Aksi</th>
             </tr>
@@ -128,13 +115,11 @@
             <td><?php echo $no++ ;?></td>
             <td><?php echo 'C'.$row->kd_kriteria ;?></td>
             <td><?php echo $row->nama_kriteria ;?></td>
-            <td><?php echo $row->atribut ;?></td>
-            <td><?php echo $row->nilai_bobot ;?></td>
+            <td><?php echo $row->nilai_bobot.'%' ;?></td>
             <td>
                 <a  href                 ="javascript:;"
                     data-kd_kriteria     ="<?php echo $row->kd_kriteria ?>"
                     data-nama_kriteria   ="<?php echo $row->nama_kriteria ?>"
-                    data-atribut         ="<?php echo $row->atribut ?>"
                     data-nilai_bobot     ="<?php echo $row->nilai_bobot ?>"
                     data-toggle          ="modal"
                     data-target          ="#edit-data"
@@ -164,7 +149,6 @@
             var modal   = $(this)
             modal.find('#kd_kriteria').attr("value",div.data('kd_kriteria'));
             modal.find('#nama_kriteria').attr("value",div.data('nama_kriteria'));
-            modal.find('#atribut').attr("value",div.data('atribut'));
             modal.find('#nilai_bobot').attr("value",div.data('nilai_bobot'));
            
         });
