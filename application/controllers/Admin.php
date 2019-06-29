@@ -277,21 +277,16 @@ class Admin extends CI_Controller
 					"tanggal_lhr" 	=> $this->input->post('tanggal_lhr'),
 					"alamat" 		=> $this->input->post('alamat'),
 					"no_tlpon" 		=> $this->input->post('no_tlpon'),
-					"date_input" 	=> $date
+					"date_input" 	=> $date,
+					"c1"			=> $this->input->post('c1'),
+					"c2" 			=> $this->input->post('c2'),
+					"c3" 			=> $this->input->post('c3'),
+					"c4" 			=> $this->input->post('c4'),
+					"c5"  			=> $this->input->post('c5'),
+					"c6"			=> $this->input->post('c6')
 				);
 
-				$attribut = $this->input->post('attribut');
-				
-
 				if($this->admin_models->tambah_warga($data)){
-					$id = $this->db->get_where('tb_warga', array('date_input' => $date))->row();
-					foreach($attribut as $row){
-						$data2		= array(
-											"id_warga"		=> $id->no_peserta,
-											"id_attribut"	=> $row
-										);
-						$this->admin_models->add_sub_warga($data2);
-					}
 					$this->session->set_flashdata('info', 'data berhasil di tambah!');				
 					redirect('admin/warga');
 
@@ -302,18 +297,70 @@ class Admin extends CI_Controller
 
 			}
 
-			public function form_edit_warga()
+			public function form_edit_warga($id)
 			{
+				$data['admin']					= $this->db->get_where('admin', array('id' => 1))->row();
+				$data['edit'] 					= $this->admin_models->get_single_warga($id)->row();
+				$data['usia_anak'] 				= $this->admin_models->get_all_kriteria_att('1')->result();
+				$data['pendidikan'] 			= $this->admin_models->get_all_kriteria_att('2')->result();
+				$data['tanggungan'] 			= $this->admin_models->get_all_kriteria_att('3')->result();
+				$data['penghasilan'] 			= $this->admin_models->get_all_kriteria_att('4')->result();
+				$data['luas_sawah'] 			= $this->admin_models->get_all_kriteria_att('5')->result();
+				$data['tempat_tinggal'] 		= $this->admin_models->get_all_kriteria_att('6')->result();
+				$data['jumlah_orderan']			='1';
+				$data['script_top']    			= 'admin/script_top';
+				$data['script_bottom']  		= 'admin/script_btm';
+				$data['admin_nav']				= 'admin/admin_nav';
+				$data['judul'] 					= 'Warga';
+				$data['sub_judul'] 				= 'Tabel warga';
+				$data['content'] 				= 'admin/warga_edit';
+				$data['nav_top']				= 'warga';
+				$this->load->view('admin/home', $data);
 
 			}
 
 			public function edit_warga()
 			{
+				$id_warga = $this->input->post('id_warga');
+				$date = date("Y-m-d H:i:s") ;
+				$data = array(
+					"nama"			=> $this->input->post('nama'),
+					"tempat_lhr" 	=> $this->input->post('tempat_lhr'),
+					"tanggal_lhr" 	=> $this->input->post('tanggal_lhr'),
+					"alamat" 		=> $this->input->post('alamat'),
+					"no_tlpon" 		=> $this->input->post('no_tlpon'),
+					"date_input" 	=> $date,
+					"c1"			=> $this->input->post('c1'),
+					"c2" 			=> $this->input->post('c2'),
+					"c3" 			=> $this->input->post('c3'),
+					"c4" 			=> $this->input->post('c4'),
+					"c5"  			=> $this->input->post('c5'),
+					"c6"			=> $this->input->post('c6')
+				);
+
+				if($this->admin_models->update_warga($data,$id_warga)){
+					$this->session->set_flashdata('info', 'data berhasil di update!');				
+					redirect('admin/warga');
+
+				}else{
+					$this->session->set_flashdata('danger', 'kesalahan update data');				
+					redirect('admin/warga');
+				}
+
 
 			}
 
 			public function delete_warga()
 			{
+				$id 	= $this->input->post('id');
+				if($this->admin_models->hapus_warga($id)){
+					$this->session->set_flashdata('info', 'data berhasil di hapus!');				
+					redirect('admin/warga');
+
+				}else{
+					$this->session->set_flashdata('danger', 'kesalahan menghapus data');				
+					redirect('admin/warga');
+				}
 
 			}
 

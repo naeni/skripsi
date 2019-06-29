@@ -147,6 +147,30 @@
 		public function add_sub_warga($data2){
 			return $this->db->insert('tb_warga_attribut',$data2);
 		}
+
+		public function get_single_warga($id){
+			$this->db->select('a.no_peserta as id_warga, a.nama, a.tempat_lhr, a.tanggal_lhr, a.alamat, a.no_tlpon, a.c1, a.c2, a.c3, a.c4, a.c5, a.c6, b.keterangan as keterangan_anak, c.keterangan as keterangan_pendidikan, d.keterangan as keterangan_tanggungan, e.keterangan as keterangan_penghasilan, f.keterangan as keterangan_sawah, g.keterangan as keterangan_tinggal');
+			$this->db->join('tb_attribut b','a.c1 = b.id','left' );
+			$this->db->join('tb_attribut c','a.c2 = c.id','left' );
+			$this->db->join('tb_attribut d','a.c3 = d.id','left' );
+			$this->db->join('tb_attribut e','a.c4 = e.id','left' );
+			$this->db->join('tb_attribut f','a.c5 = f.id','left' );
+			$this->db->join('tb_attribut g','a.c6 = g.id','left' );
+			$this->db->where('a.no_peserta',$id);
+			$this->db->from('tb_warga a');
+			return $this->db->get();
+			
+		}
+
+		public function update_warga($data,$id_warga){
+			$this->db->where('no_peserta',$id_warga);
+			return $this->db->update('tb_warga',$data);
+
+		}
+		public function hapus_warga($id){
+			$this->db->where('no_peserta',$id);
+			return $this->db->delete('tb_warga');
+		}
 	
 
 

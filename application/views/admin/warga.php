@@ -44,7 +44,7 @@
                     <div class="form-group">
                         <label class="col-lg-4 col-sm-4 control-label">Usia Anak</label>
                         <div class="col-lg-8">
-                            <select class="form-control" name="attribut[]" require>
+                            <select class="form-control" name="c1" require>
                                 <option value="">- Pilih Usia Anak -</option>
                                 <?php foreach ($usia_anak as $row){?>
                                     <option value="<?php echo $row->id;?>"><?php echo $row->keterangan;?></option>
@@ -55,7 +55,7 @@
                     <div class="form-group">
                         <label class="col-lg-4 col-sm-4 control-label">Pendidikan</label>
                         <div class="col-lg-8">
-                            <select class="form-control" name="attribut[]" require>
+                            <select class="form-control" name="c2" require>
                                 <option value="">- Pilih Pendidikan -</option>
                                 <?php foreach ($pendidikan as $row){?>
                                     <option value="<?php echo $row->id;?>"><?php echo $row->keterangan;?></option>
@@ -66,7 +66,7 @@
                     <div class="form-group">
                         <label class="col-lg-4 col-sm-4 control-label">Tanggungan</label>
                         <div class="col-lg-8">
-                            <select class="form-control" name="attribut[]" require>
+                            <select class="form-control" name="c3" require>
                                 <option value="">- Pilih tanggungan -</option>
                                 <?php foreach ($tanggungan as $row){?>
                                     <option value="<?php echo $row->id;?>"><?php echo $row->keterangan;?></option>
@@ -77,7 +77,7 @@
                     <div class="form-group">
                         <label class="col-lg-4 col-sm-4 control-label">Penghasilan</label>
                         <div class="col-lg-8">
-                            <select class="form-control" name="attribut[]" require>
+                            <select class="form-control" name="c4" require>
                                 <option value="">- Penghasilan -</option>
                                 <?php foreach ($penghasilan as $row){?>
                                     <option value="<?php echo $row->id;?>"><?php echo $row->keterangan;?></option>
@@ -88,7 +88,7 @@
                     <div class="form-group">
                         <label class="col-lg-4 col-sm-4 control-label">Luas sawah</label>
                         <div class="col-lg-8">
-                            <select class="form-control" name="attribut[]" require>
+                            <select class="form-control" name="c5" require>
                                 <option value="">- Pilih Luas Sawah -</option>
                                 <?php foreach ($luas_sawah as $row){?>
                                     <option value="<?php echo $row->id;?>"><?php echo $row->keterangan;?></option>
@@ -99,7 +99,7 @@
                     <div class="form-group">
                         <label class="col-lg-4 col-sm-4 control-label">Tempat Tinggal</label>
                         <div class="col-lg-8">
-                            <select class="form-control" name="attribut[]" require>
+                            <select class="form-control" name="c6" require>
                                 <option value="">- Pilih Tempat tinggal -</option>
                                 <?php foreach ($tempat_tinggal as $row){?>
                                     <option value="<?php echo $row->id;?>"><?php echo $row->keterangan;?></option>
@@ -130,7 +130,7 @@
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
                 <h4 class="modal-title">Anda Yakin Hapus Ini?</h4>
             </div>
-            <form class="form-horizontal" action="<?php echo base_url('admin/')?>" method="post" enctype="multipart/form-data" role="form">
+            <form class="form-horizontal" action="<?php echo base_url('admin/delete_warga')?>" method="post" enctype="multipart/form-data" role="form">
                 <div class="modal-body">
                         <div class="form-group">
                            <label class="col-lg-4 col-sm-4 control-label">Nama warga </label>
@@ -203,4 +203,5 @@
            
         });
     });
+
 </script>
