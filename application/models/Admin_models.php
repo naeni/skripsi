@@ -132,9 +132,9 @@
 
 		public function get_nilai_wp(){
 			$this->db->select('*');
-			$this->db->join('tb_warga','tb_hasil.no_peserta = tb_warga.no_peserta','left' );
-			$this->db->from('tb_hasil');
-			$this->db->order_by('nilai_wp','DESC');
+			$this->db->join('tb_warga','tb_hasil_wp.no_peserta = tb_warga.no_peserta','left' );
+			$this->db->from('tb_hasil_wp');
+			$this->db->order_by('nilai_v','DESC');
 			return $this->db->get();
 
 		}
@@ -170,6 +170,58 @@
 		public function hapus_warga($id){
 			$this->db->where('no_peserta',$id);
 			return $this->db->delete('tb_warga');
+		}
+
+		public function input_penilaian($data2){
+			return $this->db->insert('tb_penilaian',$data2);
+		}
+		public function delete_penilaian($id_warga){
+			$this->db->where('no_peserta',$id_warga);
+			return $this->db->delete('tb_penilaian');
+		}
+
+		public function get_max_penilian($no){
+			$this->db->select_max('angka_penilaian');
+			$this->db->where('kd_kriteria',$no);
+			$this->db->from('tb_penilaian');
+			return $this->db->get();
+
+		}
+
+		public function get_min_penilaian($no){
+			$this->db->select_min('angka_penilaian');
+			$this->db->where('kd_kriteria',$no);
+			$this->db->from('tb_penilaian');
+			return $this->db->get();
+		}
+
+		public function get_nilai_warga($no_peserta,$no){
+			$this->db->select('angka_penilaian, nilai_bobot');
+			$this->db->where('no_peserta',$no_peserta);
+			$this->db->where('kd_kriteria',$no);
+			$this->db->from('tb_penilaian');
+			return $this->db->get();
+
+		}
+
+		public function insert_nilai_saw($data){
+			return $this->db->insert('tb_hasil',$data);
+		}
+
+		public function insert_nilai_wp_s($data){
+			return $this->db->insert('tb_hasil_wp',$data);
+		}
+
+		public function get_sum_v(){
+			$this->db->select_sum('nilai_s');
+			$this->db->from('tb_hasil_wp');
+			return $this->db->get();
+		}
+
+		public function insert_nilai_wp_v($data,$no_peserta){
+			$this->db->where('no_peserta',$no_peserta);
+			return $this->db->update('tb_hasil_wp',$data);
+
 		}
 	
 

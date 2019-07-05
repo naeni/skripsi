@@ -271,6 +271,12 @@ class Admin extends CI_Controller
 			public function add_warga()
 			{
 				$date = date("Y-m-d H:i:s") ;
+				$a['atribut_1'] = $this->input->post('c1');
+				$a['atribut_2'] = $this->input->post('c2');
+				$a['atribut_3'] = $this->input->post('c3');
+				$a['atribut_4'] = $this->input->post('c4');
+				$a['atribut_5'] = $this->input->post('c5');
+				$a['atribut_6'] = $this->input->post('c6');
 				$data = array(
 					"nama"			=> $this->input->post('nama'),
 					"tempat_lhr" 	=> $this->input->post('tempat_lhr'),
@@ -278,15 +284,32 @@ class Admin extends CI_Controller
 					"alamat" 		=> $this->input->post('alamat'),
 					"no_tlpon" 		=> $this->input->post('no_tlpon'),
 					"date_input" 	=> $date,
-					"c1"			=> $this->input->post('c1'),
-					"c2" 			=> $this->input->post('c2'),
-					"c3" 			=> $this->input->post('c3'),
-					"c4" 			=> $this->input->post('c4'),
-					"c5"  			=> $this->input->post('c5'),
-					"c6"			=> $this->input->post('c6')
+					"c1"			=> $a['atribut_1'],
+					"c2" 			=> $a['atribut_2'],
+					"c3" 			=> $a['atribut_3'],
+					"c4" 			=> $a['atribut_4'],
+					"c5"  			=> $a['atribut_5'],
+					"c6"			=> $a['atribut_6']
 				);
 
 				if($this->admin_models->tambah_warga($data)){
+					//masuk ke tabel penilaian
+					$warga 		= $this->db->get_where('tb_warga', array('date_input' =>$date))->row();
+					$no_peserta = $warga->no_peserta;
+					
+					for($i=1; $i<=6 ;$i++){
+						$p['penilaian_'.$i]	= $this->db->get_where('tb_attribut', array('id' =>$a['atribut_'.$i]))->row();
+						$b['bobot_'.$i]		= $this->db->get_where('tb_kriteria', array('kd_kriteria' =>$p['penilaian_'.$i]->id_kriteria))->row();
+						$data2 		= array(
+											"no_peserta" 		=>$no_peserta,	
+											"kd_kriteria" 		=>$b['bobot_'.$i]->kd_kriteria,
+											"angka_penilaian" 	=>$p['penilaian_'.$i]->nilai,
+											"nilai_bobot"		=>$b['bobot_'.$i]->nilai_bobot
+										);
+						$this->admin_models->input_penilaian($data2);
+
+					}
+
 					$this->session->set_flashdata('info', 'data berhasil di tambah!');				
 					redirect('admin/warga');
 
@@ -321,8 +344,14 @@ class Admin extends CI_Controller
 
 			public function edit_warga()
 			{
-				$id_warga = $this->input->post('id_warga');
-				$date = date("Y-m-d H:i:s") ;
+				$id_warga 		= $this->input->post('id_warga');
+				$date 			= date("Y-m-d H:i:s") ;
+				$a['atribut_1'] = $this->input->post('c1');
+				$a['atribut_2'] = $this->input->post('c2');
+				$a['atribut_3'] = $this->input->post('c3');
+				$a['atribut_4'] = $this->input->post('c4');
+				$a['atribut_5'] = $this->input->post('c5');
+				$a['atribut_6'] = $this->input->post('c6');
 				$data = array(
 					"nama"			=> $this->input->post('nama'),
 					"tempat_lhr" 	=> $this->input->post('tempat_lhr'),
@@ -330,15 +359,33 @@ class Admin extends CI_Controller
 					"alamat" 		=> $this->input->post('alamat'),
 					"no_tlpon" 		=> $this->input->post('no_tlpon'),
 					"date_input" 	=> $date,
-					"c1"			=> $this->input->post('c1'),
-					"c2" 			=> $this->input->post('c2'),
-					"c3" 			=> $this->input->post('c3'),
-					"c4" 			=> $this->input->post('c4'),
-					"c5"  			=> $this->input->post('c5'),
-					"c6"			=> $this->input->post('c6')
+					"c1"			=> $a['atribut_1'],
+					"c2" 			=> $a['atribut_2'],
+					"c3" 			=> $a['atribut_3'],
+					"c4" 			=> $a['atribut_4'],
+					"c5"  			=> $a['atribut_5'],
+					"c6"			=> $a['atribut_6']
 				);
 
 				if($this->admin_models->update_warga($data,$id_warga)){
+					// delete terlebidahulu kolom penilaian
+					$this->admin_models->delete_penilaian($id_warga);
+					//masuk ke tabel penilaian
+					$warga 		= $this->db->get_where('tb_warga', array('date_input' =>$date))->row();
+					$no_peserta = $warga->no_peserta;
+					
+					for($i=1; $i<=6 ;$i++){
+						$p['penilaian_'.$i]	= $this->db->get_where('tb_attribut', array('id' =>$a['atribut_'.$i]))->row();
+						$b['bobot_'.$i]		= $this->db->get_where('tb_kriteria', array('kd_kriteria' =>$p['penilaian_'.$i]->id_kriteria))->row();
+						$data2 		= array(
+											"no_peserta" 		=>$no_peserta,	
+											"kd_kriteria" 		=>$b['bobot_'.$i]->kd_kriteria,
+											"angka_penilaian" 	=>$p['penilaian_'.$i]->nilai,
+											"nilai_bobot"		=>$b['bobot_'.$i]->nilai_bobot
+										);
+						$this->admin_models->input_penilaian($data2);
+
+					}
 					$this->session->set_flashdata('info', 'data berhasil di update!');				
 					redirect('admin/warga');
 
@@ -354,6 +401,7 @@ class Admin extends CI_Controller
 			{
 				$id 	= $this->input->post('id');
 				if($this->admin_models->hapus_warga($id)){
+					$this->admin_models->delete_penilaian($id_warga);
 					$this->session->set_flashdata('info', 'data berhasil di hapus!');				
 					redirect('admin/warga');
 
@@ -368,6 +416,7 @@ class Admin extends CI_Controller
 			{
 				$data['admin']					= $this->db->get_where('admin', array('id' => 1))->row();
 				$data['table'] 					= $this->admin_models->get_nilai_saw()->result();
+				$data['warga'] 					= $this->admin_models->get_all_warga()->result();
 				$data['script_top']    			= 'admin/script_top';
 				$data['script_bottom']  		= 'admin/script_btm';
 				$data['admin_nav']				= 'admin/admin_nav';
@@ -383,6 +432,7 @@ class Admin extends CI_Controller
 			{
 				$data['admin']					= $this->db->get_where('admin', array('id' => 1))->row();
 				$data['table'] 					= $this->admin_models->get_nilai_wp()->result();
+				$data['warga'] 					= $this->admin_models->get_all_warga()->result();
 				$data['script_top']    			= 'admin/script_top';
 				$data['script_bottom']  		= 'admin/script_btm';
 				$data['admin_nav']				= 'admin/admin_nav';
@@ -392,6 +442,90 @@ class Admin extends CI_Controller
 				$data['nav_top']				= 'penilaian';
 				$this->load->view('admin/home', $data);
 
+			}
+
+			public function hitung_saw()
+			{
+				$no_peserta 			= $this->input->post('no_peserta');
+				$max_kriteria['k_1'] 	= $this->admin_models->get_max_penilian('1')->row();
+				$max_kriteria['k_2'] 	= $this->admin_models->get_max_penilian('2')->row();
+				$max_kriteria['k_3'] 	= $this->admin_models->get_max_penilian('3')->row();
+
+				$min_kriteria['mink_4'] = $this->admin_models->get_min_penilaian('4')->row();
+				$min_kriteria['mink_5'] = $this->admin_models->get_min_penilaian('5')->row();
+				$min_kriteria['mink_6'] = $this->admin_models->get_min_penilaian('6')->row();
+
+				$nilai['attribut_1'] 	= $this->admin_models->get_nilai_warga($no_peserta,'1')->row();
+				$nilai['attribut_2'] 	= $this->admin_models->get_nilai_warga($no_peserta,'2')->row();
+				$nilai['attribut_3'] 	= $this->admin_models->get_nilai_warga($no_peserta,'3')->row();
+				$nilai['attribut_4'] 	= $this->admin_models->get_nilai_warga($no_peserta,'4')->row();
+				$nilai['attribut_5'] 	= $this->admin_models->get_nilai_warga($no_peserta,'5')->row();
+				$nilai['attribut_6'] 	= $this->admin_models->get_nilai_warga($no_peserta,'6')->row();
+
+				$h1	 	= $nilai['attribut_1']->angka_penilaian / $max_kriteria['k_1']->angka_penilaian;
+				$h2	 	= $nilai['attribut_2']->angka_penilaian / $max_kriteria['k_2']->angka_penilaian;
+				$h3	 	= $nilai['attribut_3']->angka_penilaian / $max_kriteria['k_3']->angka_penilaian;
+
+				$h4 	= $min_kriteria['mink_4']->angka_penilaian / $nilai['attribut_4']->angka_penilaian;
+				$h5 	= $min_kriteria['mink_5']->angka_penilaian / $nilai['attribut_5']->angka_penilaian;
+				$h6 	= $min_kriteria['mink_6']->angka_penilaian / $nilai['attribut_6']->angka_penilaian;
+
+				$final 	= $h1*$nilai['attribut_1']->nilai_bobot + $h2*$nilai['attribut_2']->nilai_bobot + $h3*$nilai['attribut_3']->nilai_bobot + $h4*$nilai['attribut_4']->nilai_bobot + $h4*$nilai['attribut_5']->nilai_bobot + $h6*$nilai['attribut_6']->nilai_bobot ;
+
+				$data 	= array("no_peserta" => $no_peserta,"nilai_saw"=>$final);
+				if($this->db->get_where('tb_hasil',array('no_peserta'=>$no_peserta))->row()){
+					$this->session->set_flashdata('danger', 'Peserta Sudah Di Hitung');				
+					redirect('admin/nilai_saw');
+
+				}else{
+					$this->admin_models->insert_nilai_saw($data);
+					$this->session->set_flashdata('info', 'data berhasil di hitung!');				
+					redirect('admin/nilai_saw');
+				}
+				
+
+			}
+
+			public function hitung_wp()
+			{
+				$no_peserta 			= $this->input->post('no_peserta');
+				$nilai['attribut_1'] 	= $this->admin_models->get_nilai_warga($no_peserta,'1')->row();
+				$nilai['attribut_2'] 	= $this->admin_models->get_nilai_warga($no_peserta,'2')->row();
+				$nilai['attribut_3'] 	= $this->admin_models->get_nilai_warga($no_peserta,'3')->row();
+				$nilai['attribut_4'] 	= $this->admin_models->get_nilai_warga($no_peserta,'4')->row();
+				$nilai['attribut_5'] 	= $this->admin_models->get_nilai_warga($no_peserta,'5')->row();
+				$nilai['attribut_6'] 	= $this->admin_models->get_nilai_warga($no_peserta,'6')->row();
+
+				$hitung 				= pow($nilai['attribut_1']->angka_penilaian,$nilai['attribut_1']->nilai_bobot) * pow($nilai['attribut_2']->angka_penilaian,$nilai['attribut_2']->nilai_bobot) * pow($nilai['attribut_3']->angka_penilaian,$nilai['attribut_3']->nilai_bobot) * pow($nilai['attribut_4']->angka_penilaian,-$nilai['attribut_4']->nilai_bobot) * pow($nilai['attribut_5']->angka_penilaian,-$nilai['attribut_5']->nilai_bobot) * pow($nilai['attribut_6']->angka_penilaian,-$nilai['attribut_6']->nilai_bobot);
+				$data 					= array("no_peserta" => $no_peserta,"nilai_s"=>$hitung);
+				if($this->db->get_where('tb_hasil_wp',array('no_peserta'=>$no_peserta))->row()){
+					$this->session->set_flashdata('danger', 'Peserta Sudah Di Hitung');				
+					redirect('admin/nilai_wp');
+
+				}else{
+					$this->admin_models->insert_nilai_wp_s($data);
+					$this->session->set_flashdata('info', 'data berhasil di hitung!');				
+					redirect('admin/nilai_wp');
+				}
+
+
+			}
+
+			public function hitung_wp_v()
+			{
+				$no_peserta = $this->input->post('no_peserta');
+				$nilai_s	= $this->input->post('nilai_s');
+				$sum 		= $this->admin_models->get_sum_v()->row();
+				$hitung 	= $nilai_s / $sum->nilai_s ;
+				$data 		= array("nilai_v"=>$hitung);
+				if($this->admin_models->insert_nilai_wp_v($data,$no_peserta)){
+					$this->session->set_flashdata('info', 'data berhasil di hitung!');				
+					redirect('admin/nilai_wp');
+				}else{
+					$this->session->set_flashdata('danger', 'kesalahan menghitung data');				
+					redirect('admin/nilai_wp');
+					
+				}
 			}
 
 		}
