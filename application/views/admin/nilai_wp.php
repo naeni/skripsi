@@ -50,7 +50,7 @@
                 <th>Nama</th>
                 <th>Nilai S</th>
                 <th>Nilai V</th>
-                <th>Aksi</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>

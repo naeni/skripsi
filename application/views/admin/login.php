@@ -9,7 +9,7 @@
 	<body class="hold-transition login-page">
 		<div class="login-box">
 			<div class="login-logo">
-				<a href=""><b>Administrator</b></a>
+				<a href=""><b>Program Keluarga Harapan</b></a>
 				<img src="">
 			</div>
 		  	<div class="login-box-body">
